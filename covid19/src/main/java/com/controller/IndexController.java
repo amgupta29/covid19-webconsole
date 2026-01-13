@@ -3,20 +3,12 @@ package com.controller;
 import java.io.IOException;
 import java.util.Map;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.fluent.Form;
-import org.apache.http.client.fluent.Request;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.util.EntityUtils;
-import org.omg.CORBA.NameValuePair;
+import org.apache.hc.client5.http.classic.methods.HttpPost;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
+import org.apache.hc.client5.http.impl.classic.HttpClients;
+import org.apache.hc.core5.http.ClassicHttpResponse;
+import org.apache.hc.core5.http.ContentType;
+import org.apache.hc.core5.http.io.entity.StringEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -37,13 +29,12 @@ public class IndexController {
 
             //String json = "{"id":1,"name":"John"}";
             String json = "{\"additionalProperties\":{},\"location\":{\"additionalProperties\":{},\"latitude\":57.7150033,\"longitude\":12.0011183},\"radius\":100,\"timeSpan\":500}";
-            StringEntity entity = new StringEntity(json);
+            StringEntity entity = new StringEntity(json, ContentType.APPLICATION_JSON);
             httpPost.setEntity(entity);
             httpPost.setHeader("Accept", "application/json");
-            httpPost.setHeader("Content-type", "application/json");
 
-            CloseableHttpResponse response = client.execute(httpPost);
-            if(response.getStatusLine().getStatusCode() == 200) {
+            ClassicHttpResponse response = client.execute(httpPost);
+            if(response.getCode() == 200) {
                 //String body = response.getEntity().getContent().
             }
             client.close();
@@ -52,7 +43,7 @@ public class IndexController {
 
             return "";
 
-            //assertThat(response.getStatusLine().getStatusCode(), equalTo(200));
+            //assertThat(response.getCode(), equalTo(200));
         } catch (IOException ie) {
 
             return "";
